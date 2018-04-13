@@ -10,6 +10,7 @@ class Vector {
   plus(vector) {
     if (vector instanceof Vector) {
       return new Vector(this.x + vector.x, this.y + vector.y);
+    // else можно убрать, т.к. в if return
     } else {
       throw new TypeError(`${vector} не является объектом класса Vector`);
     }
@@ -26,6 +27,7 @@ class Actor {
       this.pos = pos;
       this.size = size;
       this.speed = speed;
+    // лучше сначала проверки, а потом остальной код
     } else if (!(pos instanceof Vector)) {
       throw new TypeError(`${pos} не является объектом класса Vector`);
     } else if (!(size instanceof Vector)) {
@@ -55,8 +57,10 @@ class Actor {
   isIntersect(actor) {
     if (!(actor instanceof Actor)) {
       throw new TypeError(`${actor} не является объектом класса Actor`);
+      // else не нужен
     } else if (actor === this) {
       return false;
+      // else не нужен
     } else {
       return this.left < actor.right && actor.left < this.right && this.top < actor.bottom && actor.top < this.bottom;
     }
@@ -66,15 +70,19 @@ class Actor {
 // -------------------------- LEVEL -------------------------------------------
 class Level {
   constructor(grid = [], actors = []) {
+    // тут лушче осздать копии массивов,
+    // чтобы нельзя было изменить поля обхекта извне
     this.grid = grid;
     this.actors = actors;
     this.player = actors.find(elem => elem.type === 'player');
     this.height = grid.length;
+    // можно добавить 0 в список аргументов Math.max и убрать проверку this.height
     this.width = this.height === 0 ? 0 : Math.max(...grid.map(elem => elem.length));
     this.status = null;
     this.finishDelay = 1;
   }
   isFinished() {
+    // тут можно написать просто return this.finishDelay < 0 && this.status !== null;
     if ((this.finishDelay < 0) && (this.status !== null)) {
       return true;
     }
@@ -83,6 +91,7 @@ class Level {
   actorAt(actor) {
     if (!(actor instanceof Actor)) {
       throw new TypeError(`${actor} не является объектом класса Actor`);
+      // else не нужен
     } else {
       return this.actors.find(elem => elem.isIntersect(actor));
     }
@@ -90,8 +99,10 @@ class Level {
   obstacleAt(target, size) {
     if (!(target instanceof Vector)) {
       throw new TypeError(`${target} не является объектом класса Vector`);
+      // else не нужен
     } else if (!(size instanceof Vector)) {
       throw new TypeError(`${size} не является объектом класса Vector`);
+      // else не нужен
     } else {
       const movingActor = new Actor(target, size);
       if (movingActor.top < 0 || movingActor.left < 0 || movingActor.right > this.width) {
@@ -100,13 +111,17 @@ class Level {
       if (movingActor.bottom > this.height) {
         return `lava`;
       }
+      // омжно округлённые значения записать в переменные, чтобы каждый раз не округлять
       for (let i = Math.floor(movingActor.left); i < Math.ceil(movingActor.right); i++) {
         for (let j = Math.floor(movingActor.top); j < Math.ceil(movingActor.bottom); j++) {
+          // this.grid[j][i] лучше записать в переменную, чтобы 2 раза не писать
+          // !== undefined можно заменить на просто if (this.grid)
           if (this.grid [j][i] !== undefined) {
             return this.grid[j][i];
           }
         }
       }
+      // лишняя строчка
     return undefined;
     }
   }
@@ -134,6 +149,7 @@ class Level {
 // -------------------------- LEVEL PARSER ------------------------------------
 class LevelParser {
   constructor(dictionary = {}) {
+    //  лучше создать копию объекта
     this.dictionary = dictionary;
   }
   actorFromSymbol(symbol) {
@@ -161,6 +177,7 @@ class LevelParser {
         }
       }
     }
+    // отступ
   return actors;
   }
   parse(plan) {
@@ -171,7 +188,9 @@ class LevelParser {
 // -------------------------- OBJECTS -----------------------------------------
 class Fireball extends Actor {
   constructor(pos = new Vector(0, 0), speed = new Vector(0, 0)) {
+    // отступ
         super(pos, new Vector(1, 1), speed)
+    // отступ
     }
   get type() {
     return "fireball";
@@ -219,6 +238,7 @@ class Coin extends Actor {
     super(pos.plus(new Vector(0.2, 0.1)), new Vector(0.6, 0.6));
     this.springSpeed = 8;
     this.springDist = 0.07;
+    // а зачем 0 отнимать?
     this.spring = Math.random() * (Math.PI * 2 - 0);
     this.start = pos.plus(new Vector(0.2, 0.1));
   }

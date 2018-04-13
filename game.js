@@ -10,10 +10,9 @@ class Vector {
   plus(vector) {
     if (vector instanceof Vector) {
       return new Vector(this.x + vector.x, this.y + vector.y);
-    // else можно убрать, т.к. в if return
-    } else {
-      throw new TypeError(`${vector} не является объектом класса Vector`);
-    }
+    // else можно убрать, т.к. в if return - DONE
+    } 
+    throw new TypeError(`${vector} не является объектом класса Vector`);
   }
   times(factor = 1) {
     return new Vector(this.x * factor, this.y * factor);
@@ -57,13 +56,13 @@ class Actor {
   isIntersect(actor) {
     if (!(actor instanceof Actor)) {
       throw new TypeError(`${actor} не является объектом класса Actor`);
-      // else не нужен
-    } else if (actor === this) {
-      return false;
-      // else не нужен
-    } else {
-      return this.left < actor.right && actor.left < this.right && this.top < actor.bottom && actor.top < this.bottom;
-    }
+      // else не нужен - DONE
+    } 
+    if (actor === this) {
+    return false;
+      // else не нужен - DONE
+    } 
+    return this.left < actor.right && actor.left < this.right && this.top < actor.bottom && actor.top < this.bottom;
   }
 }
 
@@ -82,48 +81,43 @@ class Level {
     this.finishDelay = 1;
   }
   isFinished() {
-    // тут можно написать просто return this.finishDelay < 0 && this.status !== null;
-    if ((this.finishDelay < 0) && (this.status !== null)) {
-      return true;
-    }
-    return false;
+    // тут можно написать просто return this.finishDelay < 0 && this.status !== null; - DONE
+    return this.finishDelay < 0 && this.status !== null; 
   }
   actorAt(actor) {
     if (!(actor instanceof Actor)) {
       throw new TypeError(`${actor} не является объектом класса Actor`);
-      // else не нужен
-    } else {
-      return this.actors.find(elem => elem.isIntersect(actor));
-    }
+      // else не нужен - DONE
+    } 
+    return this.actors.find(elem => elem.isIntersect(actor));
   }
   obstacleAt(target, size) {
     if (!(target instanceof Vector)) {
       throw new TypeError(`${target} не является объектом класса Vector`);
-      // else не нужен
-    } else if (!(size instanceof Vector)) {
-      throw new TypeError(`${size} не является объектом класса Vector`);
-      // else не нужен
-    } else {
-      const movingActor = new Actor(target, size);
-      if (movingActor.top < 0 || movingActor.left < 0 || movingActor.right > this.width) {
-        return `wall`;
-      }
-      if (movingActor.bottom > this.height) {
-        return `lava`;
-      }
-      // омжно округлённые значения записать в переменные, чтобы каждый раз не округлять
-      for (let i = Math.floor(movingActor.left); i < Math.ceil(movingActor.right); i++) {
-        for (let j = Math.floor(movingActor.top); j < Math.ceil(movingActor.bottom); j++) {
-          // this.grid[j][i] лучше записать в переменную, чтобы 2 раза не писать
-          // !== undefined можно заменить на просто if (this.grid)
-          if (this.grid [j][i] !== undefined) {
-            return this.grid[j][i];
-          }
+      // else не нужен - DONE
+    } 
+    if (!(size instanceof Vector)) {
+    throw new TypeError(`${size} не является объектом класса Vector`);
+      // else не нужен - DONE
+    }
+    const movingActor = new Actor(target, size);
+    if (movingActor.top < 0 || movingActor.left < 0 || movingActor.right > this.width) {
+      return `wall`;
+    }
+    if (movingActor.bottom > this.height) {
+      return `lava`;
+    }
+    // омжно округлённые значения записать в переменные, чтобы каждый раз не округлять
+    for (let i = Math.floor(movingActor.left); i < Math.ceil(movingActor.right); i++) {
+      for (let j = Math.floor(movingActor.top); j < Math.ceil(movingActor.bottom); j++) {
+        // this.grid[j][i] лучше записать в переменную, чтобы 2 раза не писать
+        // !== undefined можно заменить на просто if (this.grid) - DONE
+        if (this.grid [j][i]) {
+          return this.grid[j][i];
         }
       }
-      // лишняя строчка
-    return undefined;
     }
+      // лишняя строчка - DONE
   }
   removeActor(actor) {
     this.actors = this.actors.filter(elem => elem !== actor);
@@ -177,8 +171,8 @@ class LevelParser {
         }
       }
     }
-    // отступ
-  return actors;
+    // отступ - DONE
+    return actors;
   }
   parse(plan) {
     return new Level(this.createGrid(plan), this.createActors(plan));
@@ -188,10 +182,10 @@ class LevelParser {
 // -------------------------- OBJECTS -----------------------------------------
 class Fireball extends Actor {
   constructor(pos = new Vector(0, 0), speed = new Vector(0, 0)) {
-    // отступ
-        super(pos, new Vector(1, 1), speed)
-    // отступ
-    }
+    // отступ - DONE
+    super(pos, new Vector(1, 1), speed);
+    // отступ - DONE
+  }
   get type() {
     return "fireball";
   }
@@ -238,8 +232,8 @@ class Coin extends Actor {
     super(pos.plus(new Vector(0.2, 0.1)), new Vector(0.6, 0.6));
     this.springSpeed = 8;
     this.springDist = 0.07;
-    // а зачем 0 отнимать?
-    this.spring = Math.random() * (Math.PI * 2 - 0);
+    // а зачем 0 отнимать? - DONE
+    this.spring = Math.random() * Math.PI * 2;
     this.start = pos.plus(new Vector(0.2, 0.1));
   }
   get type() {

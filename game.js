@@ -305,11 +305,10 @@ const actorDict = {
 }
 
 const parser = new LevelParser(actorDict);
-runGame(schemas, parser, DOMDisplay)
-  .then(() => alert('Вы выиграли приз!'));
+// runGame(schemas, parser, DOMDisplay)
+//  .then(() => alert('Вы выиграли приз!'));
 
-// const parser = new LevelParser(actorDict);
-
-// loadLevels()
-//   .then(levels => {runGame(JSON.parse(levels), parser, DOMDisplay);})
-//   .then(() => alert('Вы выиграли приз!'));
+loadLevels()
+  .then(levels => {runGame(JSON.parse(levels), parser, DOMDisplay)
+    .then(() => alert('Вы выиграли!'));
+    }, () => console.error('Не удалось загрузить уровни'));

@@ -150,8 +150,9 @@ class Level {
 // -------------------------- LEVEL PARSER ------------------------------------
 class LevelParser {
   constructor(dictionary = {}) {
-    //  лучше создать копию объекта
-    this.dictionary = dictionary;
+    //  лучше создать копию объекта - DONE
+    this.dictionary = {...dictionary};	  
+    // this.dictionary = Object.assign({}, dictionary); - как лучше клонировать объект - через spread или через Object.assign?
   }
   actorFromSymbol(symbol) {
     return this.dictionary[symbol];

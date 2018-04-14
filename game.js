@@ -22,34 +22,36 @@ class Vector {
 // -------------------------- ACTOR -------------------------------------------
 class Actor {
   constructor(pos = new Vector(0, 0), size = new Vector(1, 1), speed = new Vector(0, 0)) {
-    if (pos instanceof Vector && size instanceof Vector && speed instanceof Vector) {
-      this.pos = pos;
-      this.size = size;
-      this.speed = speed;
-    // лучше сначала проверки, а потом остальной код
-    } else if (!(pos instanceof Vector)) {
+    // лучше сначала проверки, а потом остальной код - DONE
+    if (!(pos instanceof Vector)) {
       throw new TypeError(`${pos} не является объектом класса Vector`);
-    } else if (!(size instanceof Vector)) {
+    }
+    if (!(size instanceof Vector)) {
       throw new TypeError(`${size} не является объектом класса Vector`);
-    } else if (!(speed instanceof Vector)) {
+    }
+    if (!(speed instanceof Vector)) {
       throw new TypeError(`${speed} не является объектом класса Vector`);
     }
-	}
-	get type() {
-		return 'actor';
-	}
-	get left() {
-		return this.pos.x;
-	}
-	get right() {
-		return this.pos.x + this.size.x;
-	}
-	get top() {
-		return this.pos.y;
-	}
-	get bottom() {
-		return this.pos.y + this.size.y;
-	}
+    this.pos = pos;
+    this.size = size;
+    this.speed = speed;
+  }
+	
+  get type() {
+    return 'actor';
+  }
+  get left() {
+    return this.pos.x;
+  }
+  get right() {
+    return this.pos.x + this.size.x;
+  }
+  get top() {
+    return this.pos.y;
+  }
+  get bottom() {
+    return this.pos.y + this.size.y;
+  }
 
   act() {
   }
@@ -70,13 +72,13 @@ class Actor {
 class Level {
   constructor(grid = [], actors = []) {
     // тут лушче осздать копии массивов,
-    // чтобы нельзя было изменить поля обхекта извне
-    this.grid = grid;
-    this.actors = actors;
+    // чтобы нельзя было изменить поля обхекта извне - DONE
+    this.grid = grid.slice();
+    this.actors = actors.slice();
     this.player = actors.find(elem => elem.type === 'player');
     this.height = grid.length;
-    // можно добавить 0 в список аргументов Math.max и убрать проверку this.height
-    this.width = this.height === 0 ? 0 : Math.max(...grid.map(elem => elem.length));
+    // можно добавить 0 в список аргументов Math.max и убрать проверку this.height - DONE
+    this.width = Math.max(0, ...grid.map(elem => elem.length));
     this.status = null;
     this.finishDelay = 1;
   }
@@ -107,13 +109,18 @@ class Level {
     if (movingActor.bottom > this.height) {
       return `lava`;
     }
-    // омжно округлённые значения записать в переменные, чтобы каждый раз не округлять
-    for (let i = Math.floor(movingActor.left); i < Math.ceil(movingActor.right); i++) {
-      for (let j = Math.floor(movingActor.top); j < Math.ceil(movingActor.bottom); j++) {
-        // this.grid[j][i] лучше записать в переменную, чтобы 2 раза не писать
+    // омжно округлённые значения записать в переменные, чтобы каждый раз не округлять - DONE
+    const left = Math.floor(movingActor.left),
+	  right = Math.ceil(movingActor.right),
+	  top = Math.floor(movingActor.top),
+	  bottom = Math.ceil(movingActor.bottom);
+    for (let i = left; i < right; i++) {
+      for (let j = top; j < bottom; j++) {
+        // this.grid[j][i] лучше записать в переменную, чтобы 2 раза не писать - DONE
+	const obstacle = this.grid [j][i];
         // !== undefined можно заменить на просто if (this.grid) - DONE
-        if (this.grid [j][i]) {
-          return this.grid[j][i];
+        if (obstacle) {
+          return obstacle;
         }
       }
     }

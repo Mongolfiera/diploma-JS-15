@@ -8,9 +8,9 @@ class Vector {
     this.y = y;
   }
   plus(vector) {
+    // лучше сначала проверить аргументы, а потом писать основной код (как в конструкторе Actor)
     if (vector instanceof Vector) {
       return new Vector(this.x + vector.x, this.y + vector.y);
-    // else можно убрать, т.к. в if return - DONE
     } 
     throw new TypeError(`${vector} не является объектом класса Vector`);
   }
@@ -58,11 +58,9 @@ class Actor {
   isIntersect(actor) {
     if (!(actor instanceof Actor)) {
       throw new TypeError(`${actor} не является объектом класса Actor`);
-      // else не нужен - DONE
     } 
     if (actor === this) {
     return false;
-      // else не нужен - DONE
     } 
     return this.left < actor.right && actor.left < this.right && this.top < actor.bottom && actor.top < this.bottom;
   }
@@ -71,36 +69,29 @@ class Actor {
 // -------------------------- LEVEL -------------------------------------------
 class Level {
   constructor(grid = [], actors = []) {
-    // тут лушче осздать копии массивов,
-    // чтобы нельзя было изменить поля обхекта извне - DONE
     this.grid = grid.slice();
     this.actors = actors.slice();
     this.player = actors.find(elem => elem.type === 'player');
     this.height = grid.length;
-    // можно добавить 0 в список аргументов Math.max и убрать проверку this.height - DONE
     this.width = Math.max(0, ...grid.map(elem => elem.length));
     this.status = null;
     this.finishDelay = 1;
   }
   isFinished() {
-    // тут можно написать просто return this.finishDelay < 0 && this.status !== null; - DONE
-    return this.finishDelay < 0 && this.status !== null; 
+    return this.finishDelay < 0 && this.status !== null;
   }
   actorAt(actor) {
     if (!(actor instanceof Actor)) {
       throw new TypeError(`${actor} не является объектом класса Actor`);
-      // else не нужен - DONE
     } 
     return this.actors.find(elem => elem.isIntersect(actor));
   }
   obstacleAt(target, size) {
     if (!(target instanceof Vector)) {
       throw new TypeError(`${target} не является объектом класса Vector`);
-      // else не нужен - DONE
     } 
     if (!(size instanceof Vector)) {
     throw new TypeError(`${size} не является объектом класса Vector`);
-      // else не нужен - DONE
     }
     const movingActor = new Actor(target, size);
     if (movingActor.top < 0 || movingActor.left < 0 || movingActor.right > this.width) {
@@ -109,22 +100,19 @@ class Level {
     if (movingActor.bottom > this.height) {
       return `lava`;
     }
-    // омжно округлённые значения записать в переменные, чтобы каждый раз не округлять - DONE
+    // не объявляйте переменные через запятую, если захотите избавится от первой придётся менять 2 строчки
     const left = Math.floor(movingActor.left),
 	  right = Math.ceil(movingActor.right),
 	  top = Math.floor(movingActor.top),
 	  bottom = Math.ceil(movingActor.bottom);
     for (let i = left; i < right; i++) {
       for (let j = top; j < bottom; j++) {
-        // this.grid[j][i] лучше записать в переменную, чтобы 2 раза не писать - DONE
 	const obstacle = this.grid [j][i];
-        // !== undefined можно заменить на просто if (this.grid) - DONE
         if (obstacle) {
           return obstacle;
         }
       }
     }
-      // лишняя строчка - DONE
   }
   removeActor(actor) {
     this.actors = this.actors.filter(elem => elem !== actor);
@@ -150,9 +138,9 @@ class Level {
 // -------------------------- LEVEL PARSER ------------------------------------
 class LevelParser {
   constructor(dictionary = {}) {
-    //  лучше создать копию объекта - DONE
-    this.dictionary = {...dictionary};	  
+    this.dictionary = {...dictionary};
     // this.dictionary = Object.assign({}, dictionary); - как лучше клонировать объект - через spread или через Object.assign?
+    // одно и тоже
   }
   actorFromSymbol(symbol) {
     return this.dictionary[symbol];
@@ -179,7 +167,6 @@ class LevelParser {
         }
       }
     }
-    // отступ - DONE
     return actors;
   }
   parse(plan) {
@@ -190,9 +177,7 @@ class LevelParser {
 // -------------------------- OBJECTS -----------------------------------------
 class Fireball extends Actor {
   constructor(pos = new Vector(0, 0), speed = new Vector(0, 0)) {
-    // отступ - DONE
     super(pos, new Vector(1, 1), speed);
-    // отступ - DONE
   }
   get type() {
     return "fireball";
@@ -240,7 +225,6 @@ class Coin extends Actor {
     super(pos.plus(new Vector(0.2, 0.1)), new Vector(0.6, 0.6));
     this.springSpeed = 8;
     this.springDist = 0.07;
-    // а зачем 0 отнимать? - DONE
     this.spring = Math.random() * Math.PI * 2;
     this.start = pos.plus(new Vector(0.2, 0.1));
   }
@@ -273,6 +257,7 @@ class Player extends Actor {
 }
 
 //--------------------------- !!! THE GAME !!! --------------------------------
+// эта переменная больше не используется - можно удалить
   const schemas = [
   [
     '         ',

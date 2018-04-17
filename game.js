@@ -60,7 +60,7 @@ class Actor {
       throw new TypeError(`${actor} не является объектом класса Actor`);
     } 
     if (actor === this) {
-    return false;
+      return false;
     } 
     return this.left < actor.right && actor.left < this.right && this.top < actor.bottom && actor.top < this.bottom;
   }
@@ -91,7 +91,7 @@ class Level {
       throw new TypeError(`${target} не является объектом класса Vector`);
     } 
     if (!(size instanceof Vector)) {
-    throw new TypeError(`${size} не является объектом класса Vector`);
+      throw new TypeError(`${size} не является объектом класса Vector`);
     }
     const movingActor = new Actor(target, size);
     if (movingActor.top < 0 || movingActor.left < 0 || movingActor.right > this.width) {
@@ -107,7 +107,7 @@ class Level {
     const bottom = Math.ceil(movingActor.bottom);
     for (let i = left; i < right; i++) {
       for (let j = top; j < bottom; j++) {
-	const obstacle = this.grid [j][i];
+        const obstacle = this.grid [j][i];
         if (obstacle) {
           return obstacle;
         }
@@ -213,7 +213,7 @@ class FireRain extends Fireball {
     super(pos, new Vector(0, 3));
     this.start = pos;
   }
-    handleObstacle() {
+  handleObstacle() {
     this.pos = this.start;
   }
 }

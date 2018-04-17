@@ -8,7 +8,6 @@ class Vector {
     this.y = y;
   }
   plus(vector) {
-    // лучше сначала проверить аргументы, а потом писать основной код (как в конструкторе Actor) - DONE
     if (!(vector instanceof Vector)) {
       throw new TypeError(`${vector} не является объектом класса Vector`);
     } 
@@ -22,7 +21,6 @@ class Vector {
 // -------------------------- ACTOR -------------------------------------------
 class Actor {
   constructor(pos = new Vector(0, 0), size = new Vector(1, 1), speed = new Vector(0, 0)) {
-    // лучше сначала проверки, а потом остальной код - DONE
     if (!(pos instanceof Vector)) {
       throw new TypeError(`${pos} не является объектом класса Vector`);
     }
@@ -100,7 +98,6 @@ class Level {
     if (movingActor.bottom > this.height) {
       return `lava`;
     }
-    // не объявляйте переменные через запятую, если захотите избавится от первой придётся менять 2 строчки - DONE
     const left = Math.floor(movingActor.left);
     const right = Math.ceil(movingActor.right);
     const top = Math.floor(movingActor.top);
@@ -255,8 +252,6 @@ class Player extends Actor {
 }
 
 //--------------------------- !!! THE GAME !!! --------------------------------
-// эта переменная больше не используется - можно удалить - DONE
-
 const actorDict = {
   '@': Player,
   'v': FireRain,

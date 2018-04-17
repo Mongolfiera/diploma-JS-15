@@ -8,11 +8,11 @@ class Vector {
     this.y = y;
   }
   plus(vector) {
-    // лучше сначала проверить аргументы, а потом писать основной код (как в конструкторе Actor)
-    if (vector instanceof Vector) {
-      return new Vector(this.x + vector.x, this.y + vector.y);
+    // лучше сначала проверить аргументы, а потом писать основной код (как в конструкторе Actor) - DONE
+    if (!(vector instanceof Vector)) {
+      throw new TypeError(`${vector} не является объектом класса Vector`);
     } 
-    throw new TypeError(`${vector} не является объектом класса Vector`);
+    return new Vector(this.x + vector.x, this.y + vector.y);
   }
   times(factor = 1) {
     return new Vector(this.x * factor, this.y * factor);
@@ -100,11 +100,11 @@ class Level {
     if (movingActor.bottom > this.height) {
       return `lava`;
     }
-    // не объявляйте переменные через запятую, если захотите избавится от первой придётся менять 2 строчки
-    const left = Math.floor(movingActor.left),
-	  right = Math.ceil(movingActor.right),
-	  top = Math.floor(movingActor.top),
-	  bottom = Math.ceil(movingActor.bottom);
+    // не объявляйте переменные через запятую, если захотите избавится от первой придётся менять 2 строчки - DONE
+    const left = Math.floor(movingActor.left);
+    const right = Math.ceil(movingActor.right);
+    const top = Math.floor(movingActor.top);
+    const bottom = Math.ceil(movingActor.bottom);
     for (let i = left; i < right; i++) {
       for (let j = top; j < bottom; j++) {
 	const obstacle = this.grid [j][i];
@@ -139,8 +139,6 @@ class Level {
 class LevelParser {
   constructor(dictionary = {}) {
     this.dictionary = {...dictionary};
-    // this.dictionary = Object.assign({}, dictionary); - как лучше клонировать объект - через spread или через Object.assign?
-    // одно и тоже
   }
   actorFromSymbol(symbol) {
     return this.dictionary[symbol];
@@ -257,29 +255,7 @@ class Player extends Actor {
 }
 
 //--------------------------- !!! THE GAME !!! --------------------------------
-// эта переменная больше не используется - можно удалить
-  const schemas = [
-  [
-    '         ',
-    '         ',
-    '    =    ',
-    '       o ',
-    '     !xxx',
-    ' @       ',
-    'xxx!     ',
-    '         '
-  ],
-  [
-    '      v  ',
-    '    v     ',
-    '  v      ',
-    '        o',
-    '        x',
-    '@   x    ',
-    'x        ',
-    '         '
-  ]
-];
+// эта переменная больше не используется - можно удалить - DONE
 
 const actorDict = {
   '@': Player,
@@ -290,8 +266,6 @@ const actorDict = {
 }
 
 const parser = new LevelParser(actorDict);
-// runGame(schemas, parser, DOMDisplay)
-//  .then(() => alert('Вы выиграли приз!'));
 
 loadLevels()
   .then(levels => {runGame(JSON.parse(levels), parser, DOMDisplay)
